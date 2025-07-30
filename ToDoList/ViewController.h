@@ -9,6 +9,9 @@
 
 @interface ViewController : UIViewController
 
+@property (weak, nonatomic) IBOutlet UILabel *helloLabel;
+
+- (IBAction)didTapButton:(id)sender;
 
 @end
 
