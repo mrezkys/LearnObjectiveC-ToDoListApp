@@ -7,11 +7,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController<UITableViewDelegate, UITableViewDataSource>
 
-@property (weak, nonatomic) IBOutlet UILabel *helloLabel;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 
-- (IBAction)didTapButton:(id)sender;
+@property (strong, nonatomic) NSArray *tasks;
 
 @end
 

@@ -15,29 +15,28 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    
+    self.tasks = @[@"Buy groceries", @"Read a book", @"Walk the dog"];
+    
+    self.tableView.dataSource = self;
+    self.tableView.delegate = self;
+    
+    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
 }
 
-- (IBAction)didTapButton:(id)sender {
-    UIAlertController *alert = [
-        UIAlertController
-        alertControllerWithTitle:@"Success"
-        message: @" Success change the label name!"
-        preferredStyle:UIAlertControllerStyleAlert
-    ];
-    
-    UIAlertAction *ok = [
-        UIAlertAction actionWithTitle:@"Ok"
-        style:UIAlertActionStyleDefault
-        handler:nil
-    ];
-    
-    [alert addAction:ok];
-    
-    [self presentViewController:alert animated:YES completion:nil];
-    
-    self.helloLabel.text = @"You Tapped the Button!";
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.tasks.count;
 
 }
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    static NSString *cellId = @"Cell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellId];
+    
+    cell.textLabel.text = self.tasks[indexPath.row];
+    
+    return cell;
+}
+
 
 @end
