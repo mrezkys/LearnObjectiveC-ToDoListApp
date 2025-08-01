@@ -6,12 +6,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TaskModel.h"
 
 @interface ViewController : UIViewController<UITableViewDelegate, UITableViewDataSource>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
-@property (strong, nonatomic) NSArray *tasks;
+@property (strong, nonatomic) NSMutableArray<TaskModel *> *tasks;
+
+- (IBAction)didTapAdd:(id)sender;
 
 @end
 

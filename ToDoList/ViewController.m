@@ -16,12 +16,15 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.tasks = @[@"Buy groceries", @"Read a book", @"Walk the dog"];
+    self.tasks = [NSMutableArray arrayWithArray:@[
+        [[TaskModel alloc] initWithTitle:@"Buy groceries" subtitle:@"Today"],
+        [[TaskModel alloc] initWithTitle:@"Read a book" subtitle:@"Chapter 2"],
+        [[TaskModel alloc] initWithTitle:@"Walk the dog" subtitle:@"Before dinner"]
+    ]];
     
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
     
-    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -29,14 +32,28 @@
 
 }
 
+- (IBAction)didTapAdd:(id)sender {
+    [self.tasks addObject:[[TaskModel alloc] initWithTitle:@"New Data" subtitle:@"New Data"]];
+    [self.tableView reloadData];
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *cellId = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellId];
-    
-    cell.textLabel.text = self.tasks[indexPath.row];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Cell"];
+    }
+
+    cell.textLabel.text = self.tasks[indexPath.row].title;
+    cell.detailTextLabel.text = self.tasks[indexPath.row].subtitle;
     
     return cell;
 }
 
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        [self.tasks removeObjectAtIndex:indexPath.row];
+        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    }
+}
 
 @end
