@@ -33,8 +33,34 @@
 }
 
 - (IBAction)didTapAdd:(id)sender {
-    [self.tasks addObject:[[TaskModel alloc] initWithTitle:@"New Data" subtitle:@"New Data"]];
-    [self.tableView reloadData];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"New Task" message:@"Enter title and note" preferredStyle:UIAlertControllerStyleAlert];
+    
+    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textfield) {
+        textfield.placeholder = @"Title";
+    }];
+    
+    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textfield) {
+        textfield.placeholder = @"Note";
+    }];
+    
+    UIAlertAction *action = [UIAlertAction actionWithTitle:@"Save" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSString *title = alert.textFields[0].text;
+        NSString *note = alert.textFields[1].text;
+        
+        if (title.length == 0) title = @"Untitled";
+        if (note.length == 0) note = @"(No note)";
+        
+        TaskModel *task = [[TaskModel alloc] initWithTitle:title subtitle:note];
+        [self.tasks addObject:task];
+        [self.tableView reloadData];
+    }];
+    
+    [alert addAction:action];
+    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+    
+    [self presentViewController:alert animated:true completion:nil];
+
+    
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
