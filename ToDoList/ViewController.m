@@ -6,6 +6,7 @@
 //
 
 #import "ViewController.h"
+#import "DetailViewController.h"
 #import <objc/runtime.h>
 
 
@@ -77,6 +78,15 @@
 
     NSString *title = textField.text;
     saveAction.enabled = title.length > 0;
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"showDetail"]) {
+        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+        TaskModel *task = self.tasks[indexPath.row];
+        DetailViewController *detailVC = (DetailViewController *)segue.destinationViewController;
+        detailVC.task = task;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
