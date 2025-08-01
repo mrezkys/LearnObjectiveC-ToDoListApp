@@ -6,6 +6,8 @@
 //
 
 #import "ViewController.h"
+#import <objc/runtime.h>
+
 
 @interface ViewController ()
 
@@ -37,6 +39,10 @@
     
     [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textfield) {
         textfield.placeholder = @"Title";
+        [textfield addTarget:self
+                      action:@selector(alertTextChanged:)
+            forControlEvents:UIControlEventEditingChanged];
+
     }];
     
     [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textfield) {
@@ -55,12 +61,22 @@
         [self.tableView reloadData];
     }];
     
+    action.enabled = false;
+    
     [alert addAction:action];
     [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
     
-    [self presentViewController:alert animated:true completion:nil];
+    objc_setAssociatedObject(alert, @"saveAction", action, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 
-    
+    [self presentViewController:alert animated:true completion:nil];
+}
+
+- (void)alertTextChanged:(UITextField *) textField {
+    UIAlertController *alert = (UIAlertController *)self.presentedViewController;
+    UIAlertAction *saveAction = objc_getAssociatedObject(alert, @"saveAction");
+
+    NSString *title = textField.text;
+    saveAction.enabled = title.length > 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
